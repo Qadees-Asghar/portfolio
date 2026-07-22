@@ -1,0 +1,25 @@
+{
+  "name": "Qadees Asghar — Software Engineering Student & Full Stack Developer",
+  "short_name": "Qadees Asghar",
+  "description": "Portfolio of Qadees Asghar, Software Engineering student at UET Lahore and Full Stack Developer.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0d14",
+  "theme_color": "#0a0d14",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/profile.jpg",
+      "type": "image/jpeg",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ]
+}

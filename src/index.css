@@ -8,6 +8,18 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
+  /* Accessibility: visible keyboard focus ring on all interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #00e5ff;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
@@ -22,6 +34,37 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #00c6ff;
   }
+}
+
+/* Accessibility: screen-reader-only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Accessibility: skip-to-content link (visible only on keyboard focus) */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: #00e5ff;
+  color: #0a0d14;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0;
 }
 
 /* Custom Glassmorphism Classes */
@@ -64,4 +107,59 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+}
+
+/* ---------------------------------------------------------------
+   Scroll-reveal animation (GPU-accelerated: opacity + transform)
+   Used by the reusable <Reveal /> component.
+--------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Aurora sweep for the hero heading gradient — subtle, slow */
+.gradient-text {
+  background-size: 200% auto;
+  animation: aurora-shift 8s ease-in-out infinite alternate;
+}
+@keyframes aurora-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 100% center; }
+}
+
+/* Very subtle film-grain noise overlay (fixed, behind content) */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------
+   Respect user's reduced-motion preference across the whole site.
+--------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }

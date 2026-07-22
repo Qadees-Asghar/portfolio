@@ -7,10 +7,6 @@ export default function CommandPalette({ isOpen, onClose }) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        isOpen ? onClose() : null;
-      }
       if (e.key === 'Escape' && isOpen) {
         onClose();
       }
@@ -40,25 +36,37 @@ export default function CommandPalette({ isOpen, onClose }) {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="bg-[#121723] border border-slate-700/80 rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden">
-        
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command search"
+      onClick={onClose}
+    >
+      <div
+        className="bg-[#121723] border border-slate-700/80 rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+
         {/* Search Input Bar */}
         <div className="flex items-center px-4 py-3.5 border-b border-slate-800 gap-3">
-          <Search className="w-5 h-5 text-cyan-400 shrink-0" />
+          <Search className="w-5 h-5 text-cyan-400 shrink-0" aria-hidden="true" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command or search projects & skills..."
+            aria-label="Search projects, skills and navigation"
             className="w-full bg-transparent text-white placeholder-slate-500 text-sm focus:outline-none font-mono"
             autoFocus
           />
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close command search"
             className="p-1 text-slate-400 hover:text-white rounded-lg bg-slate-800"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 

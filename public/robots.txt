@@ -1,0 +1,8 @@
+# Qadees Asghar Portfolio — robots.txt
+# Allow all reputable crawlers full access.
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://qadees-asghar.vercel.app/sitemap.xml
