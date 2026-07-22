@@ -13,7 +13,7 @@ import Reveal from './Reveal';
  *  submissions to the single email address you registered.)
  */
 const WEB3FORMS_ACCESS_KEY =
-  import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY';
+  import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '6a17ccce-ae4c-4387-8e66-58b56e871d83';
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
