@@ -7,13 +7,17 @@ import Skills from './components/Skills';
 import Contact from './components/Contact';
 import CommandPalette from './components/CommandPalette';
 import TerminalDrawer from './components/TerminalDrawer';
+import BackgroundCanvas from './components/BackgroundCanvas';
 
 export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-cyber-dark text-slate-100 selection:bg-cyan-500 selection:text-black font-sans relative">
+    <div className="min-h-screen bg-cyber-dark text-slate-100 selection:bg-cyan-500 selection:text-black font-sans relative overflow-x-hidden">
+      {/* Dynamic Animated Particle & Grid Background */}
+      <BackgroundCanvas />
+
       {/* Header Navigation */}
       <Navbar
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
@@ -21,7 +25,7 @@ export default function App() {
       />
 
       {/* Main Content Sections */}
-      <main>
+      <main className="relative z-10">
         <Hero onToggleTerminal={() => setIsTerminalOpen(true)} />
         <Projects />
         <Education />
