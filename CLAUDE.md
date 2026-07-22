@@ -85,7 +85,7 @@ messages that came through but weren't emailed).
 
 ### Static SEO assets served from `public/`
 
-`robots.txt`, `sitemap.xml`, `favicon.svg`, `site.webmanifest`, and `profile.jpg` live in `public/`
+`robots.txt`, `sitemap.xml`, favicon assets (`favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png`, `android-chrome-192x192.png`, `android-chrome-512x512.png`), `site.webmanifest`, and `profile.jpg` live in `public/`
 and are copied verbatim to the build output root by Vite. `vercel.json` has a catch-all rewrite
 (`/(.*) -> /index.html` for SPA routing), but Vercel's static-file-first routing serves these files
 directly before the rewrite applies — confirmed by fetching the deployed URLs directly, they return
