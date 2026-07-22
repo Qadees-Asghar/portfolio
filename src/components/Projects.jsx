@@ -41,14 +41,14 @@ export default function Projects() {
         {/* Section Header */}
         <SectionHeader
           icon={Sparkles}
-          badge="Featured Software & AI Repositories"
+          badge="Featured Software Projects & Repositories"
           accent="cyan"
           title={
             <span id="projects-heading">
               Portfolio <span className="gradient-text">Projects</span>
             </span>
           }
-          description="Exploring system architecture, machine learning algorithms, database normalization, and enterprise web solutions."
+          description="Exploring system architecture, algorithms, database normalization, and enterprise web solutions."
         />
 
         {/* Category Filters */}

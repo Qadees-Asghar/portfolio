@@ -1,13 +1,13 @@
 export const personalData = {
   name: "Qadees Asghar",
-  title: "Software Engineer & AI Specialist",
+  title: "Software Engineer & Full-Stack Developer",
   taglines: [
-    "Building Intelligent AI Systems",
-    "Training & Fine-Tuning LLMs",
-    "Developing Scalable Full-Stack & ASP.NET Apps",
-    "Applying Deep Learning to Real-World Problems"
+    "Building Full-Stack Web Applications",
+    "Developing Scalable ASP.NET Core Systems",
+    "Crafting Responsive React Interfaces",
+    "Designing Normalized SQL Databases"
   ],
-  bio: "Software Engineering student at UET Lahore with a passion for building high-performance AI models, machine learning workflows, and scalable full-stack applications. Experienced in neural networks, C#/.NET architecture, Python systems, and 3-Layer database design.",
+  bio: "Software Engineering student at UET Lahore with a passion for building scalable full-stack applications and well-architected desktop software. Experienced in C#/.NET and ASP.NET Core MVC, React front-ends, and 3-Layer, 3NF database design.",
   location: "Lahore, Pakistan",
   university: "University of Engineering & Technology (UET) Lahore",
   department: "Department of Computer Science",
@@ -27,7 +27,7 @@ export const personalData = {
     { label: "Projects Completed", value: "5+" },
     { label: "Tech Stack Tools", value: "15+" },
     { label: "UET SE Batch", value: "2025-29" },
-    { label: "AI & ML Frameworks", value: "PyTorch / TF" }
+    { label: "Core Stack", value: ".NET / React" }
   ]
 };
 
@@ -43,7 +43,7 @@ export const educationData = {
     "Database Management Systems & 3NF",
     "Software Architecture & Design Patterns",
     "Operating Systems & Multithreading",
-    "Machine Learning & Deep Neural Networks",
+    "Software Testing & Quality Assurance",
     "Web Application Development"
   ]
 };
@@ -144,44 +144,43 @@ export const skillsMatrix = [
   {
     category: "Programming Languages",
     skills: [
-      { name: "Python", level: "Advanced", icon: "python" },
-      { name: "C++", level: "Proficient", icon: "cpp" },
       { name: "C# / .NET", level: "Advanced", icon: "csharp" },
+      { name: "Python", level: "Proficient", icon: "python" },
       { name: "JavaScript", level: "Proficient", icon: "javascript" },
       { name: "SQL", level: "Advanced", icon: "sql" },
       { name: "HTML5 / CSS3", level: "Advanced", icon: "html" }
     ]
   },
   {
-    category: "Machine Learning & AI",
-    skills: [
-      { name: "PyTorch", level: "Intermediate", icon: "pytorch" },
-      { name: "TensorFlow", level: "Intermediate", icon: "tensorflow" },
-      { name: "NumPy & Pandas", level: "Advanced", icon: "pandas" },
-      { name: "Jupyter Notebooks", level: "Advanced", icon: "jupyter" },
-      { name: "LLM Fine-Tuning", level: "Exploring", icon: "ai" },
-      { name: "Minimax Algorithm", level: "Proficient", icon: "algorithm" }
-    ]
-  },
-  {
-    category: "Frameworks & Architecture",
+    category: "Frameworks & Libraries",
     skills: [
       { name: "ASP.NET Core MVC", level: "Advanced", icon: "dotnet" },
       { name: "Windows Forms", level: "Advanced", icon: "winforms" },
-      { name: "React + Vite", level: "Proficient", icon: "react" },
-      { name: "Tailwind CSS", level: "Proficient", icon: "tailwind" },
+      { name: "ADO.NET", level: "Advanced", icon: "dotnet" },
+      { name: "React", level: "Proficient", icon: "react" },
+      { name: "Vite", level: "Proficient", icon: "vite" },
+      { name: "Tailwind CSS", level: "Proficient", icon: "tailwind" }
+    ]
+  },
+  {
+    category: "Concepts & Architecture",
+    skills: [
+      { name: "OOP Design", level: "Advanced", icon: "oop" },
+      { name: "Minimax Algorithm", level: "Proficient", icon: "algorithm" },
+      { name: "GDI+ Graphics", level: "Proficient", icon: "graphics" },
       { name: "3-Layer Architecture", level: "Advanced", icon: "architecture" },
       { name: "3NF Database Design", level: "Advanced", icon: "database" }
     ]
   },
   {
-    category: "Tools & Environments",
+    category: "Tools & Deployment",
     skills: [
       { name: "Git & GitHub", level: "Advanced", icon: "git" },
       { name: "SQL Server", level: "Advanced", icon: "sqlserver" },
-      { name: "VS Code", level: "Advanced", icon: "vscode" },
       { name: "Visual Studio", level: "Advanced", icon: "visualstudio" },
-      { name: "Linux CLI", level: "Intermediate", icon: "linux" }
+      { name: "VS Code", level: "Advanced", icon: "vscode" },
+      { name: "Vercel", level: "Proficient", icon: "vercel" },
+      { name: "SEO", level: "Proficient", icon: "seo" }
     ]
   }
 ];
@@ -197,7 +196,7 @@ export const terminalCommands = {
   - clear        : Clear terminal output`,
   
   whoami: `Qadees Asghar | Software Engineering @ UET Lahore
-Focus Areas: AI/ML, Deep Learning, LLMs, ASP.NET Core & C# Architecture.
+Focus Areas: Full-Stack Web, ASP.NET Core, C# & .NET Architecture.
 Location   : Lahore, Pakistan`,
   
   education: `University of Engineering & Technology (UET) Lahore
@@ -211,9 +210,9 @@ Dept   : Department of Computer Science`,
 4. Linquora 2.0    - Python Hospital Management CLI
 5. Linquora Web    - Healthcare UI Portal`,
   
-  skills: `Languages : Python, C++, C#, SQL, JS, HTML/CSS
-AI / ML   : PyTorch, TensorFlow, NumPy, Pandas, Minimax
-Frameworks: ASP.NET Core MVC, .NET WinForms, React, Tailwind`,
+  skills: `Languages : C#, Python, SQL, JS, HTML/CSS
+Frameworks: ASP.NET Core MVC, .NET WinForms, ADO.NET, React, Tailwind
+Concepts  : OOP, Minimax, GDI+, 3-Layer & 3NF Architecture`,
   
   contact: `Email 1  : theqadees@gmail.com
 Email 2  : qadeesasghar404@gmail.com

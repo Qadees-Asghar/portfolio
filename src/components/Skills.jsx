@@ -28,7 +28,7 @@ export default function Skills() {
               Skills &amp; <span className="gradient-text">Tech Stack</span>
             </span>
           }
-          description="Comprehensive overview of programming languages, AI/ML tools, full-stack frameworks, and development environments."
+          description="Comprehensive overview of programming languages, frameworks, architectural concepts, and development tools."
         />
 
         {/* Skills Category Grid */}

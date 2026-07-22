@@ -108,7 +108,7 @@ export default function Contact() {
               </span>
             </>
           }
-          description="Open for technical roles, machine learning research, software engineering internships, and open-source collaborations."
+          description="Open for software engineering internships, full-stack development roles, and open-source collaborations."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

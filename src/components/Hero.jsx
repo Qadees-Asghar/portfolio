@@ -28,7 +28,7 @@ export default function Hero({ onToggleTerminal }) {
             {/* Status Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#121723] border border-cyan-500/30 text-xs font-mono text-cyan-300 shadow-lg shadow-cyan-500/10 animate-fade-up">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" aria-hidden="true" />
-              <span>Available for Software &amp; AI Eng. Roles</span>
+              <span>Available for Software Engineering Roles</span>
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
             </div>
 
@@ -44,7 +44,7 @@ export default function Hero({ onToggleTerminal }) {
               {/* Dynamic Animated Tagline */}
               <div className="h-10 mt-2 flex items-center justify-center lg:justify-start">
                 <p className="text-lg sm:text-xl font-mono text-cyan-400 font-medium transition-all duration-500" aria-live="polite">
-                  <span aria-hidden="true">⚡ </span>{personalData.taglines[currentTaglineIndex]}
+                  {personalData.taglines[currentTaglineIndex]}
                 </p>
               </div>
             </div>
@@ -52,9 +52,9 @@ export default function Hero({ onToggleTerminal }) {
             {/* Personal Bio */}
             <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
               Software Engineering Student at <strong className="text-white">UET Lahore</strong> specializing in{' '}
-              <span className="text-cyan-300 font-medium">Machine Learning</span>,{' '}
-              <span className="text-purple-300 font-medium">Deep Learning</span>, and{' '}
-              <span className="text-cyan-300 font-medium">ASP.NET Core MVC & Full-Stack Systems</span>. Dedicated to engineering robust, intelligent software from database schemas to AI deployments.
+              <span className="text-cyan-300 font-medium">ASP.NET Core MVC</span>,{' '}
+              <span className="text-purple-300 font-medium">C# &amp; .NET</span>, and{' '}
+              <span className="text-cyan-300 font-medium">React Full-Stack Systems</span>. Dedicated to engineering robust, well-architected software from normalized database schemas to responsive user interfaces.
             </p>
 
             {/* Quick Metadata Info */}

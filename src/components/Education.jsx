@@ -66,7 +66,7 @@ export default function Education() {
               </div>
 
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed pt-2">
-                Focusing on theoretical software engineering, machine learning architectures, high-performance C#/.NET development, and big data processing models.
+                Focusing on theoretical software engineering, object-oriented design, high-performance C#/.NET development, and relational database systems.
               </p>
             </div>
 
