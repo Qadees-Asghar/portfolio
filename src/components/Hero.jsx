@@ -144,7 +144,7 @@ export default function Hero({ onToggleTerminal }) {
                   height="420"
                   fetchpriority="high"
                   decoding="async"
-                  className="w-full h-[420px] object-cover object-top rounded-2xl filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-[300px] sm:h-[360px] md:h-[420px] object-cover object-[50%_25%] rounded-2xl filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-700"
                 />
 
                 {/* Glassmorphic Overlay Badge */}

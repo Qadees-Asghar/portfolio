@@ -50,7 +50,7 @@ export default function Skills() {
               </div>
 
               {/* Skills Grid Pills */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {cat.skills.map((skill, sIdx) => (
                   <div
                     key={sIdx}

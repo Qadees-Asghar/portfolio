@@ -318,7 +318,7 @@ export default function Contact() {
             <span className="text-cyan-400">Full Stack Developer</span>
           </div>
           <p className="text-[11px] text-slate-500 font-mono">
-            Built with React, Vite &amp; Tailwind CSS.
+            Built with ❤️ by Qadees Asghar
           </p>
         </footer>
 
