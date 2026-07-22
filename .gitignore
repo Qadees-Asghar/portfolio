@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Production build
+dist
+dist-ssr
+*.local
+
+# Workspace archives & extracted folders
+*.zip
+extracted_qadees
+extracted_linquora
+extracted_servigo2
+servigo
+Project
+
+# Logs & Environment
+*.log
+.env
+.env.local
+
+# IDE & System
+.vscode
+.idea
+.DS_Store
+Thumbs.db
