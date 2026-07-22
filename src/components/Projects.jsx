@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { projectsData } from '../data/portfolioData';
 import { Github, Cpu, Globe, Monitor, Terminal, Layout, X, CheckCircle2, Sparkles, Layers } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 import Reveal from './Reveal';
 
-export default function Projects() {
+export default function Projects({ selectedProject, setSelectedProject }) {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [selectedProject, setSelectedProject] = useState(null);
 
   const categories = ['All', 'Full-Stack / Web', 'AI & Algorithms', 'Desktop & Systems', 'Python Systems'];
 
@@ -148,32 +148,36 @@ export default function Projects() {
           ))}
         </div>
 
-        {/* Detailed Modal Drawer */}
-        {selectedProject && (
+      </div>
+
+      {/* Modal rendered via portal so it escapes main's stacking context */}
+      {selectedProject && createPortal(
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+          onClick={() => setSelectedProject(null)}
+        >
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="project-modal-title"
-            onClick={() => setSelectedProject(null)}
+            className="bg-[#121723] border border-slate-700/80 rounded-3xl max-w-2xl w-full max-h-[90vh] shadow-2xl relative flex flex-col"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="bg-[#121723] border border-slate-700/80 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
+
+            {/* Close Button — outside scrollable area so it's always visible */}
+            <button
+              type="button"
+              onClick={() => setSelectedProject(null)}
+              aria-label="Close project details"
+              className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
             >
+              <X className="w-5 h-5" aria-hidden="true" />
+            </button>
 
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setSelectedProject(null)}
-                aria-label="Close project details"
-                className="absolute top-5 right-5 p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-              >
-                <X className="w-5 h-5" aria-hidden="true" />
-              </button>
-
+            {/* Scrollable content */}
+            <div className="overflow-y-auto p-6 sm:p-8">
               {/* Modal Header */}
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-4 pr-10">
                 <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
                   {getProjectIcon(selectedProject.icon)}
                 </div>
@@ -247,12 +251,13 @@ export default function Projects() {
                   Close Window
                 </button>
               </div>
-
             </div>
-          </div>
-        )}
 
-      </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
     </section>
   );
 }

@@ -24,6 +24,7 @@ function SectionFallback() {
 export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   // Global ⌘K / Ctrl+K shortcut to toggle the command palette.
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function App() {
       <Navbar
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onToggleTerminal={() => setIsTerminalOpen(!isTerminalOpen)}
+        hidden={!!selectedProject}
       />
 
       {/* Main Content Sections */}
@@ -56,7 +58,7 @@ export default function App() {
         <Hero onToggleTerminal={() => setIsTerminalOpen(true)} />
 
         <Suspense fallback={<SectionFallback />}>
-          <Projects />
+          <Projects selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
           <Education />
           <Skills />
           <Contact />

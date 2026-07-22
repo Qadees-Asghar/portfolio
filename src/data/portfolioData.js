@@ -156,10 +156,7 @@ export const skillsMatrix = [
     skills: [
       { name: "ASP.NET Core MVC", level: "Advanced", icon: "dotnet" },
       { name: "Windows Forms", level: "Advanced", icon: "winforms" },
-      { name: "ADO.NET", level: "Advanced", icon: "dotnet" },
-      { name: "React", level: "Proficient", icon: "react" },
-      { name: "Vite", level: "Proficient", icon: "vite" },
-      { name: "Tailwind CSS", level: "Proficient", icon: "tailwind" }
+      { name: "ADO.NET", level: "Advanced", icon: "dotnet" }
     ]
   },
   {
@@ -167,7 +164,6 @@ export const skillsMatrix = [
     skills: [
       { name: "OOP Design", level: "Advanced", icon: "oop" },
       { name: "Minimax Algorithm", level: "Proficient", icon: "algorithm" },
-      { name: "GDI+ Graphics", level: "Proficient", icon: "graphics" },
       { name: "3-Layer Architecture", level: "Advanced", icon: "architecture" },
       { name: "3NF Database Design", level: "Advanced", icon: "database" }
     ]

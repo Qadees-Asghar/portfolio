@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Terminal, Command, Github, Linkedin, Menu, X } from 'lucide-react';
 import { personalData } from '../data/portfolioData';
 
-export default function Navbar({ onOpenCommandPalette, onToggleTerminal }) {
+export default function Navbar({ onOpenCommandPalette, onToggleTerminal, hidden }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -25,6 +25,8 @@ export default function Navbar({ onOpenCommandPalette, onToggleTerminal }) {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        hidden ? 'pointer-events-none opacity-0 -translate-y-full' : ''
+      } ${
         scrolled
           ? 'bg-[#0a0d14]/85 backdrop-blur-md border-b border-slate-800/80 py-3.5 shadow-xl'
           : 'bg-transparent py-5'
