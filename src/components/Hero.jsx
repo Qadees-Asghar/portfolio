@@ -151,7 +151,7 @@ export default function Hero({ onToggleTerminal }) {
                 <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl glass-panel border border-white/10 backdrop-blur-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-white font-bold text-base">Qadees Asghar</h4>
+                      <p className="text-white font-bold text-base">Qadees Asghar</p>
                       <p className="text-xs text-cyan-300 font-mono">Software Engineering @ UET</p>
                     </div>
                     <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-black font-bold">
