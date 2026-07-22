@@ -309,15 +309,8 @@ export default function Contact() {
         </div>
 
         {/* Global Footer */}
-        <footer className="mt-24 pt-8 border-t border-slate-800/80 text-center space-y-4">
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-slate-400">
-            <span>© {new Date().getFullYear()} Qadees Asghar</span>
-            <span aria-hidden="true">•</span>
-            <span>UET Lahore BS Software Engineering</span>
-            <span aria-hidden="true">•</span>
-            <span className="text-cyan-400">Full Stack Developer</span>
-          </div>
-          <p className="text-[11px] text-slate-500 font-mono">
+        <footer className="mt-24 pt-8 border-t border-slate-800/80 text-center">
+          <p className="text-xs text-slate-400 font-mono">
             Built with ❤️ by Qadees Asghar
           </p>
         </footer>
