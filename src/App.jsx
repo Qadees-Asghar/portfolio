@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BackgroundCanvas from './components/BackgroundCanvas';
@@ -78,6 +79,9 @@ export default function App() {
           <TerminalDrawer isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
         )}
       </Suspense>
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }
