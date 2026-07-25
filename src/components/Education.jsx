@@ -13,7 +13,6 @@ export default function Education() {
         <SectionHeader
           icon={GraduationCap}
           badge="Academic Background"
-          accent="purple"
           title={
             <span id="education-heading">
               Education &amp; <span className="gradient-text">Academic Record</span>
@@ -27,12 +26,12 @@ export default function Education() {
 
           {/* Main University Card */}
           <Reveal className="lg:col-span-7 glass-panel p-8 rounded-3xl border border-slate-800/80 relative overflow-hidden flex flex-col justify-between">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-bl-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent-400/5 rounded-bl-full pointer-events-none" />
 
             <div className="space-y-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-500 to-purple-600 p-0.5 shadow-xl">
+                  <div className="w-14 h-14 rounded-2xl bg-accent-400 p-0.5 shadow-xl">
                     <div className="w-full h-full bg-[#0a0d14] rounded-[14px] flex items-center justify-center text-cyan-400">
                       <Building2 className="w-7 h-7" aria-hidden="true" />
                     </div>
@@ -49,7 +48,7 @@ export default function Education() {
               </div>
 
               <div className="space-y-3 pt-2">
-                <div className="inline-block px-3.5 py-1.5 rounded-xl bg-purple-950/60 border border-purple-500/30 text-purple-200 text-sm font-semibold">
+                <div className="inline-block px-3.5 py-1.5 rounded-xl bg-ink-800 border border-ink-700 text-fg text-sm font-semibold">
                   {educationData.degree}
                 </div>
 
@@ -59,7 +58,7 @@ export default function Education() {
                     <span>{educationData.years}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-purple-400" aria-hidden="true" />
+                    <MapPin className="w-4 h-4 text-fg-muted" aria-hidden="true" />
                     <span>{educationData.location}</span>
                   </div>
                 </div>

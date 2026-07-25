@@ -1,263 +1,389 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { LazyMotion, domAnimation, m, AnimatePresence } from 'framer-motion';
 import { projectsData } from '../data/portfolioData';
-import { Github, Cpu, Globe, Monitor, Terminal, Layout, X, CheckCircle2, Sparkles, Layers } from 'lucide-react';
+import { Github, Cpu, Globe, Monitor, Terminal, Layout, X, Check, Sparkles, ArrowUpRight } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 import Reveal from './Reveal';
 
-export default function Projects({ selectedProject, setSelectedProject }) {
-  const [activeCategory, setActiveCategory] = useState('All');
+const EASE = [0.16, 1, 0.3, 1];
 
-  const categories = ['All', 'Full-Stack / Web', 'AI & Algorithms', 'Desktop & Systems', 'Python Systems'];
+const PROJECT_ICONS = {
+  Globe,
+  Cpu,
+  Monitor,
+  Terminal,
+};
 
-  const filteredProjects = activeCategory === 'All'
-    ? projectsData
-    : projectsData.filter((p) => p.category === activeCategory);
+function ProjectIcon({ name, className }) {
+  const Icon = PROJECT_ICONS[name] || Layout;
+  return <Icon className={className} aria-hidden="true" />;
+}
 
-  // Close the details modal with the Escape key (accessibility).
+/* ------------------------------------------------------------------ */
+/* Modal                                                               */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Project details dialog.
+ *
+ * Rendered through a portal so it escapes <main>'s stacking context, and
+ * implements the three things the previous version promised via
+ * `aria-modal` but did not actually do: a focus trap, focus restoration
+ * to the element that opened it, and a background scroll lock.
+ */
+function ProjectModal({ project, onClose }) {
+  const dialogRef = useRef(null);
+
   useEffect(() => {
-    if (!selectedProject) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') setSelectedProject(null);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [selectedProject]);
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  const getProjectIcon = (iconName) => {
-    switch (iconName) {
-      case 'Globe': return <Globe className="w-5 h-5 text-cyan-400" aria-hidden="true" />;
-      case 'Cpu': return <Cpu className="w-5 h-5 text-purple-400" aria-hidden="true" />;
-      case 'Monitor': return <Monitor className="w-5 h-5 text-blue-400" aria-hidden="true" />;
-      case 'Terminal': return <Terminal className="w-5 h-5 text-emerald-400" aria-hidden="true" />;
-      default: return <Layout className="w-5 h-5 text-cyan-400" aria-hidden="true" />;
-    }
-  };
+    const focusables = () =>
+      [...dialog.querySelectorAll(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      )].filter((el) => el.offsetParent !== null);
+
+    (focusables()[0] || dialog).focus();
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
 
   return (
-    <section id="projects" className="py-24 relative z-10 bg-[#0a0d14]/60" aria-labelledby="projects-heading">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <m.div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-ink-950/80 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2, ease: EASE }}
+      onClick={onClose}
+    >
+      <m.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-modal-title"
+        tabIndex={-1}
+        initial={{ opacity: 0, y: 12, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 8, scale: 0.99 }}
+        transition={{ duration: 0.32, ease: EASE }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative flex flex-col w-full max-w-2xl max-h-[88vh] rounded-panel surface-raised shadow-2xl shadow-black/60 focus:outline-none"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close project details"
+          className="absolute top-4 right-4 z-10 inline-flex items-center justify-center w-9 h-9 rounded-field text-fg-subtle hover:text-fg hover:bg-ink-700 transition-colors duration-200"
+        >
+          <X className="w-4 h-4" aria-hidden="true" />
+        </button>
 
-        {/* Section Header */}
-        <SectionHeader
-          icon={Sparkles}
-          badge="Featured Software Projects & Repositories"
-          accent="cyan"
-          title={
-            <span id="projects-heading">
-              Portfolio <span className="gradient-text">Projects</span>
-            </span>
-          }
-          description="Exploring system architecture, algorithms, database normalization, and enterprise web solutions."
-        />
+        <div className="overflow-y-auto p-6 sm:p-8">
+          {/* Header */}
+          <div className="flex items-start gap-4 pr-10">
+            <div className="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-card bg-ink-900 border border-ink-700">
+              <ProjectIcon name={project.icon} className="w-5 h-5 text-accent-400" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-micro font-mono uppercase text-fg-subtle">
+                {project.category}
+              </p>
+              <h3 id="project-modal-title" className="mt-1 text-h3 font-semibold text-fg">
+                {project.title}
+              </h3>
+            </div>
+          </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12" role="group" aria-label="Filter projects by category">
-          {categories.map((cat) => (
+          <p className="mt-6 text-body text-fg-muted">{project.description}</p>
+
+          {/* Highlights */}
+          <div className="mt-6 rounded-card bg-ink-900 border border-ink-700 p-5">
+            <h4 className="text-micro font-mono uppercase text-fg-subtle">
+              Technical highlights
+            </h4>
+            <ul className="mt-4 space-y-2.5">
+              {project.highlights.map((highlight) => (
+                <li key={highlight} className="flex items-start gap-3 text-body text-fg-muted">
+                  <Check className="w-4 h-4 mt-0.5 shrink-0 text-accent-400" aria-hidden="true" />
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Stack */}
+          <div className="mt-6">
+            <h4 className="text-micro font-mono uppercase text-fg-subtle">
+              Technologies used
+            </h4>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {project.tech.map((tech) => (
+                <li
+                  key={tech}
+                  className="px-2.5 py-1 rounded-field bg-ink-900 border border-ink-700 text-label font-mono text-fg-muted"
+                >
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-8 pt-6 border-t border-ink-700 flex items-center justify-between gap-4">
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`View ${project.title} repository on GitHub (opens in a new tab)`}
+              className="inline-flex items-center gap-2 h-11 px-5 rounded-card bg-accent-400 hover:bg-accent-300 text-ink-950 font-medium text-body transition-colors duration-300"
+            >
+              <Github className="w-4 h-4" aria-hidden="true" />
+              View repository
+            </a>
             <button
-              key={cat}
               type="button"
-              onClick={() => setActiveCategory(cat)}
-              aria-pressed={activeCategory === cat}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 ${
-                activeCategory === cat
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-600 text-black font-bold shadow-lg shadow-cyan-500/20 scale-105'
-                  : 'bg-[#121723] text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700'
-              }`}
+              onClick={onClose}
+              className="h-11 px-4 rounded-card text-body font-medium text-fg-muted hover:text-fg transition-colors duration-300"
             >
-              {cat}
+              Close
             </button>
-          ))}
+          </div>
         </div>
+      </m.div>
+    </m.div>
+  );
+}
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, idx) => (
-            <Reveal
-              key={project.id}
-              delay={(idx % 3) * 90}
-              role="button"
-              tabIndex={0}
-              aria-label={`View details for ${project.title}`}
-              onClick={() => setSelectedProject(project)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setSelectedProject(project);
-                }
-              }}
-              className="glass-panel glass-panel-hover rounded-2xl p-6 border border-slate-800/80 flex flex-col justify-between cursor-pointer group relative overflow-hidden"
-            >
-              {/* Subtle top border hover highlight */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+/* ------------------------------------------------------------------ */
+/* Card                                                                */
+/* ------------------------------------------------------------------ */
 
-              <div>
-                {/* Header info */}
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                    {getProjectIcon(project.icon)}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-purple-950/70 border border-purple-500/30 text-purple-300">
-                      {project.badge}
-                    </span>
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-mono bg-cyan-950/60 text-cyan-300 border border-cyan-500/20">
-                      {project.status}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Title & Summary */}
-                <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors mb-2">
-                  {project.title}
-                </h3>
-                
-                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6 line-clamp-3">
-                  {project.summary}
-                </p>
-              </div>
-
-              {/* Tech Tags & CTA */}
-              <div>
-                <div className="flex flex-wrap gap-1.5 mb-6">
-                  {project.tech.slice(0, 4).map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-900/90 text-slate-300 border border-slate-800"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                  {project.tech.length > 4 && (
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-900 text-slate-400">
-                      +{project.tech.length - 4}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-slate-800/60 text-xs font-medium">
-                  <span className="text-cyan-400 group-hover:underline flex items-center gap-1 font-mono">
-                    View Details &amp; Architecture <span aria-hidden="true">→</span>
-                  </span>
-                  <div className="p-1.5 text-slate-400 group-hover:text-white rounded-lg bg-slate-900">
-                    <Github className="w-4 h-4" aria-hidden="true" />
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
+/**
+ * The card is an <article>, not a button. The title carries the only
+ * card-level control, and its ::after overlay extends the hit area across
+ * the whole card — so the entire surface stays clickable while exposing a
+ * single, correctly-labelled control to assistive tech. The repository
+ * link sits above that overlay as a genuine second link, rather than the
+ * previous decorative icon that looked clickable but wasn't.
+ */
+function ProjectCard({ project, index, onOpen }) {
+  return (
+    <Reveal
+      as="article"
+      delay={(index % 3) * 80}
+      className="group relative flex flex-col rounded-panel surface surface-interactive p-6
+                 focus-within:ring-2 focus-within:ring-accent-400 focus-within:ring-offset-2 focus-within:ring-offset-ink-950"
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="inline-flex items-center justify-center w-10 h-10 rounded-card bg-ink-900 border border-ink-700">
+          <ProjectIcon name={project.icon} className="w-5 h-5 text-accent-400" />
         </div>
-
+        <div className="flex flex-wrap items-center justify-end gap-1.5">
+          <span className="px-2 py-0.5 rounded-field bg-ink-900 border border-ink-700 text-micro font-mono text-fg-subtle">
+            {project.badge}
+          </span>
+          <span className="px-2 py-0.5 rounded-field bg-ink-900 border border-ink-700 text-micro font-mono text-accent-300">
+            {project.status}
+          </span>
+        </div>
       </div>
 
-      {/* Modal rendered via portal so it escapes main's stacking context */}
-      {selectedProject && createPortal(
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="project-modal-title"
-          onClick={() => setSelectedProject(null)}
+      <h3 className="mt-5 text-h3 font-semibold text-fg">
+        <button
+          type="button"
+          onClick={() => onOpen(project)}
+          className="text-left transition-colors duration-300 group-hover:text-accent-300
+                     after:absolute after:inset-0 after:rounded-panel after:content-['']
+                     focus-visible:outline-none"
         >
-          <div
-            className="bg-[#121723] border border-slate-700/80 rounded-3xl max-w-2xl w-full max-h-[90vh] shadow-2xl relative flex flex-col"
-            onClick={(e) => e.stopPropagation()}
+          {project.title}
+        </button>
+      </h3>
+
+      <p className="mt-3 text-body text-fg-muted line-clamp-3">{project.summary}</p>
+
+      {/* Stack preview */}
+      <ul className="mt-6 flex flex-wrap gap-1.5">
+        {project.tech.slice(0, 4).map((tech) => (
+          <li
+            key={tech}
+            className="px-2 py-0.5 rounded-field bg-ink-900 border border-ink-700 text-micro font-mono text-fg-subtle"
           >
+            {tech}
+          </li>
+        ))}
+        {project.tech.length > 4 && (
+          <li className="px-2 py-0.5 text-micro font-mono text-fg-subtle">
+            +{project.tech.length - 4}
+          </li>
+        )}
+      </ul>
 
-            {/* Close Button — outside scrollable area so it's always visible */}
-            <button
-              type="button"
-              onClick={() => setSelectedProject(null)}
-              aria-label="Close project details"
-              className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-            >
-              <X className="w-5 h-5" aria-hidden="true" />
-            </button>
+      {/* Footer — pushed to the bottom so cards align regardless of copy length */}
+      <div className="mt-auto pt-6 flex items-center justify-between gap-4">
+        <span className="inline-flex items-center gap-1.5 text-label font-medium text-accent-300" aria-hidden="true">
+          View details
+          <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 ease-premium group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </span>
 
-            {/* Scrollable content */}
-            <div className="overflow-y-auto p-6 sm:p-8">
-              {/* Modal Header */}
-              <div className="flex items-center gap-3 mb-4 pr-10">
-                <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                  {getProjectIcon(selectedProject.icon)}
-                </div>
-                <div>
-                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
-                    {selectedProject.category}
-                  </span>
-                  <h3 id="project-modal-title" className="text-2xl font-extrabold text-white">
-                    {selectedProject.title}
-                  </h3>
-                </div>
-              </div>
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${project.title} repository on GitHub (opens in a new tab)`}
+          className="relative z-10 inline-flex items-center justify-center w-8 h-8 rounded-field text-fg-subtle hover:text-fg hover:bg-ink-700 transition-colors duration-300"
+        >
+          <Github className="w-4 h-4" aria-hidden="true" />
+        </a>
+      </div>
+    </Reveal>
+  );
+}
 
-              {/* Description */}
-              <div className="space-y-4 my-6">
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  {selectedProject.description}
-                </p>
+/* ------------------------------------------------------------------ */
+/* Section                                                             */
+/* ------------------------------------------------------------------ */
 
-                {/* Key Highlights */}
-                <div className="bg-[#0a0d14] rounded-2xl p-5 border border-slate-800/80 space-y-3">
-                  <h4 className="text-xs font-mono font-bold uppercase text-purple-400 flex items-center gap-2">
-                    <Layers className="w-4 h-4" aria-hidden="true" />
-                    <span>Technical Highlights &amp; Features</span>
-                  </h4>
-                  <ul className="space-y-2">
-                    {selectedProject.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-300">
-                        <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" aria-hidden="true" />
-                        <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+const CATEGORIES = ['All', 'Full-Stack / Web', 'AI & Algorithms', 'Desktop & Systems', 'Python Systems'];
 
-                {/* Complete Tech Stack */}
-                <div>
-                  <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-2">
-                    Technologies & Frameworks Used
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.tech.map((t, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 rounded-lg text-xs font-mono bg-cyan-950/40 text-cyan-300 border border-cyan-500/30"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+export default function Projects({ selectedProject, setSelectedProject }) {
+  const [activeCategory, setActiveCategory] = useState('All');
+  const returnFocusTo = useRef(null);
 
-              {/* Modal Footer Actions */}
-              <div className="pt-6 border-t border-slate-800 flex items-center justify-between">
-                <a
-                  href={selectedProject.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`View ${selectedProject.title} repository on GitHub (opens in a new tab)`}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs sm:text-sm transition-all"
-                >
-                  <Github className="w-4 h-4" aria-hidden="true" />
-                  <span>View Repository on GitHub</span>
-                </a>
+  const filteredProjects =
+    activeCategory === 'All'
+      ? projectsData
+      : projectsData.filter((p) => p.category === activeCategory);
+
+  const openModal = useCallback(
+    (project) => {
+      // Remember the card that opened the dialog so focus can return to it.
+      returnFocusTo.current = document.activeElement;
+      setSelectedProject(project);
+    },
+    [setSelectedProject]
+  );
+
+  const closeModal = useCallback(() => setSelectedProject(null), [setSelectedProject]);
+
+  /**
+   * Background scroll lock and focus restoration.
+   *
+   * Deliberately keyed to `selectedProject` here rather than to the dialog's
+   * unmount: the dialog outlives dismissal by the length of its exit
+   * animation, and a paused animation (e.g. the user switches tabs mid-close)
+   * would otherwise leave the page scroll-locked indefinitely. Tying these to
+   * the state change releases them the instant the dialog is dismissed.
+   */
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    // Compensate for the scrollbar so the page behind cannot shift sideways.
+    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+    const prevOverflow = document.body.style.overflow;
+    const prevPadRight = document.body.style.paddingRight;
+    document.body.style.overflow = 'hidden';
+    if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPadRight;
+      returnFocusTo.current?.focus?.();
+    };
+  }, [selectedProject]);
+
+  return (
+    <LazyMotion features={domAnimation} strict>
+      <section id="projects" className="relative py-24 md:py-30" aria-labelledby="projects-heading">
+        <div className="mx-auto w-full max-w-[1200px] px-6 lg:px-8">
+          <SectionHeader
+            icon={Sparkles}
+            badge="Selected work"
+            title={<span id="projects-heading">Projects</span>}
+            description="System architecture, algorithms, and full-stack web applications — built end to end."
+          />
+
+          {/* Filters */}
+          <div
+            className="flex flex-wrap items-center justify-center gap-2 mb-12"
+            role="group"
+            aria-label="Filter projects by category"
+          >
+            {CATEGORIES.map((cat) => {
+              const isActive = activeCategory === cat;
+              return (
                 <button
+                  key={cat}
                   type="button"
-                  onClick={() => setSelectedProject(null)}
-                  className="px-4 py-2.5 text-xs text-slate-400 hover:text-white"
+                  onClick={() => setActiveCategory(cat)}
+                  aria-pressed={isActive}
+                  className={`h-9 px-4 rounded-full text-label font-medium transition-colors duration-300 ${
+                    isActive
+                      ? 'bg-accent-400 text-ink-950'
+                      : 'surface text-fg-muted hover:text-fg hover:bg-ink-800'
+                  }`}
                 >
-                  Close Window
+                  {cat}
                 </button>
-              </div>
-            </div>
-
+              );
+            })}
           </div>
-        </div>,
+
+          {/* Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project, idx) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={idx}
+                onOpen={openModal}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* The portal wraps AnimatePresence, not the other way round:
+          AnimatePresence has to see the motion element as its own direct
+          child to track mount/unmount, and a portal element hides it. */}
+      {createPortal(
+        <AnimatePresence>
+          {selectedProject && (
+            <ProjectModal
+              key={selectedProject.id}
+              project={selectedProject}
+              onClose={closeModal}
+            />
+          )}
+        </AnimatePresence>,
         document.body
       )}
-
-    </section>
+    </LazyMotion>
   );
 }

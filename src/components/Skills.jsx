@@ -8,7 +8,7 @@ export default function Skills() {
   const getCategoryIcon = (idx) => {
     switch (idx) {
       case 0: return <Code2 className="w-5 h-5 text-cyan-400" aria-hidden="true" />;
-      case 1: return <Cpu className="w-5 h-5 text-purple-400" aria-hidden="true" />;
+      case 1: return <Cpu className="w-5 h-5 text-fg-muted" aria-hidden="true" />;
       case 2: return <Layers className="w-5 h-5 text-blue-400" aria-hidden="true" />;
       default: return <Wrench className="w-5 h-5 text-emerald-400" aria-hidden="true" />;
     }
@@ -22,7 +22,6 @@ export default function Skills() {
         <SectionHeader
           icon={Sparkles}
           badge="Technical Capabilities"
-          accent="cyan"
           title={
             <span id="skills-heading">
               Skills &amp; <span className="gradient-text">Tech Stack</span>

@@ -81,7 +81,7 @@ export default function Navbar({ onOpenCommandPalette, onToggleTerminal, hidden 
           <button
             type="button"
             onClick={onToggleTerminal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500/10 to-purple-500/10 hover:from-cyan-500/20 hover:to-purple-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-mono font-semibold transition-all hover:scale-105"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-ink-800 hover:bg-ink-700 text-cyan-400 border border-cyan-500/30 text-xs font-mono font-semibold transition-all hover:scale-105"
             aria-label="Open interactive CLI terminal"
           >
             <Terminal className="w-4 h-4" aria-hidden="true" />
