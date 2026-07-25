@@ -17,7 +17,7 @@ const TerminalDrawer = lazy(() => import('./components/TerminalDrawer'));
 function SectionFallback() {
   return (
     <div className="py-24 flex items-center justify-center" aria-hidden="true">
-      <div className="w-5 h-5 rounded-full border-2 border-ink-700 border-t-accent-400 animate-spin" />
+      <div className="w-6 h-6 rounded-full border-2 border-cyan-500/40 border-t-cyan-400 animate-spin" />
     </div>
   );
 }
@@ -40,7 +40,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-ink-950 text-fg selection:bg-accent-400 selection:text-ink-950 font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-cyber-dark text-slate-100 selection:bg-cyan-500 selection:text-black font-sans relative overflow-x-hidden">
       {/* Dynamic Animated Particle & Grid Background */}
       <BackgroundCanvas />
 
@@ -58,18 +58,10 @@ export default function App() {
       <main id="main-content" className="relative z-10">
         <Hero onToggleTerminal={() => setIsTerminalOpen(true)} />
 
-        {/* One boundary per section: each chunk streams in as soon as it
-            resolves, instead of all four blocking on the slowest. */}
         <Suspense fallback={<SectionFallback />}>
           <Projects selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
           <Education />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
           <Skills />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
           <Contact />
         </Suspense>
       </main>

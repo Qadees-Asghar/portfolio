@@ -61,29 +61,23 @@ export default function BackgroundCanvas() {
     const divisor = isMobile ? 28000 : 18000;
     const particleCount = Math.min(Math.floor((width * height) / divisor), cap);
     const particles = [];
-    // Single-hue field: one cyan, one neutral. No second accent, no neon.
-    const colors = ['#22D3EE', '#3A3F48'];
+    const colors = ['#00c6ff', '#ae81ff', '#00e5ff', '#6a3093'];
     const linkDist = isMobile ? 100 : 130;
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        radius: Math.random() * 1.5 + 0.7,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        radius: Math.random() * 2 + 1,
         color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: Math.random() * 0.3 + 0.14,
-        // Per-particle twinkle: random phase and rate, so the field breathes
-        // without any two points ever pulsing in step.
-        phase: Math.random() * Math.PI * 2,
-        rate: 0.4 + Math.random() * 0.7,
+        alpha: Math.random() * 0.5 + 0.3,
       });
     }
 
     const drawScene = () => {
       ctx.clearRect(0, 0, width, height);
-      const t = performance.now() * 0.001;
 
       // Soft radial glow easing toward the cursor (skipped on mobile/no-pointer).
       if (!isMobile && mouse.x !== null && mouse.y !== null) {
@@ -93,8 +87,8 @@ export default function BackgroundCanvas() {
           mouse.gx, mouse.gy, 0,
           mouse.gx, mouse.gy, 220
         );
-        glow.addColorStop(0, 'rgba(34, 211, 238, 0.035)');
-        glow.addColorStop(1, 'rgba(34, 211, 238, 0)');
+        glow.addColorStop(0, 'rgba(0, 198, 255, 0.10)');
+        glow.addColorStop(1, 'rgba(0, 198, 255, 0)');
         ctx.fillStyle = glow;
         ctx.fillRect(mouse.gx - 220, mouse.gy - 220, 440, 440);
       }
@@ -109,7 +103,7 @@ export default function BackgroundCanvas() {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.alpha * (0.6 + 0.4 * Math.sin(t * p.rate + p.phase));
+        ctx.globalAlpha = p.alpha;
         ctx.fill();
 
         for (let j = i + 1; j < particles.length; j++) {
@@ -121,9 +115,9 @@ export default function BackgroundCanvas() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = '#22D3EE';
-            ctx.globalAlpha = (1 - dist / linkDist) * 0.1;
-            ctx.lineWidth = 0.7;
+            ctx.strokeStyle = '#00c6ff';
+            ctx.globalAlpha = (1 - dist / linkDist) * 0.18;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }
@@ -136,9 +130,9 @@ export default function BackgroundCanvas() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = '#22D3EE';
-            ctx.globalAlpha = (1 - mdist / mouse.radius) * 0.14;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = '#ae81ff';
+            ctx.globalAlpha = (1 - mdist / mouse.radius) * 0.35;
+            ctx.lineWidth = 1;
             ctx.stroke();
           }
         }
@@ -187,44 +181,22 @@ export default function BackgroundCanvas() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-      {/* Particle field — faint texture, not decoration. */}
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-90" />
+      {/* HTML5 Interactive Particle Canvas */}
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-70" />
 
-      {/* Two ambient lights on co-prime drift cycles. Still far below the six
-          stacked blur layers this replaced, but enough that the page reads as
-          lit rather than flat. */}
-      <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[900px] h-[560px] rounded-full bg-accent-400/[0.06] blur-[160px] motion-safe:animate-drift pointer-events-none" />
-      <div className="absolute bottom-[-15%] right-[-10%] w-[620px] h-[520px] rounded-full bg-accent-400/[0.035] blur-[150px] motion-safe:animate-drift-slow pointer-events-none" />
+      {/* Floating Animated Gradient Glow Blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-600/10 blur-[150px] animate-pulse-slow pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tl from-purple-600/20 via-cyan-500/15 to-transparent blur-[160px] animate-pulse-slow pointer-events-none" />
+      <div className="absolute top-[40%] right-[20%] w-[350px] h-[350px] rounded-full bg-cyan-400/10 blur-[130px] animate-float pointer-events-none" />
 
-      {/* Structural grid — neutral, not accent-tinted, and masked so it fades
-          out down the page rather than competing with content below the fold. */}
+      {/* Cyber Grid Lines Overlay */}
       <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
-          maskImage: 'radial-gradient(ellipse 90% 65% at 50% 0%, #000 40%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 90% 65% at 50% 0%, #000 40%, transparent 100%)',
+          backgroundImage: `linear-gradient(to right, #00c6ff 1px, transparent 1px), linear-gradient(to bottom, #00c6ff 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
         }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, #FFFFFF 1px, transparent 1px), linear-gradient(to bottom, #FFFFFF 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-            opacity: 0.02,
-          }}
-        />
-
-        {/* One hairline travelling down the grid. A single moving element
-            reads as craft; a field of them would read as noise. */}
-        <div
-          className="absolute inset-x-0 top-0 h-px motion-safe:animate-sweep"
-          style={{
-            background:
-              'linear-gradient(to right, transparent, rgba(34,211,238,0.5), transparent)',
-          }}
-        />
-      </div>
+      />
     </div>
   );
 }

@@ -3,20 +3,9 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    /* Slightly tighter default rhythm; sections supply their own spacing. */
-    -webkit-text-size-adjust: 100%;
-  }
-
   body {
-    @apply bg-ink-950 text-fg antialiased min-h-screen;
-    /* Inter stylistic sets: straight-leg a/g, disambiguated 1/l. */
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
-  }
-
-  /* Numeric data (stats, dates, versions) should never shift width. */
-  .tabular {
-    font-variant-numeric: tabular-nums;
+    @apply bg-[#0a0d14] text-slate-100 antialiased min-h-screen;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   /* Accessibility: visible keyboard focus ring on all interactive elements */
@@ -26,25 +15,24 @@
   textarea:focus-visible,
   select:focus-visible,
   [tabindex]:focus-visible {
-    outline: 2px solid theme('colors.accent.400');
-    outline-offset: 3px;
-    border-radius: 8px;
+    outline: 2px solid #00e5ff;
+    outline-offset: 2px;
+    border-radius: 6px;
   }
 
-  /* Custom Scrollbar — neutral, no accent until interaction. */
+  /* Custom Scrollbar */
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: theme('colors.ink.950');
+    background: #0a0d14;
   }
   ::-webkit-scrollbar-thumb {
-    background: theme('colors.ink.700');
-    border-radius: 8px;
-    border: 3px solid theme('colors.ink.950');
+    background: #1f293d;
+    border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.ink.600');
+    background: #00c6ff;
   }
 }
 
@@ -68,115 +56,98 @@
   left: 1rem;
   z-index: 100;
   padding: 0.75rem 1.25rem;
-  background: theme('colors.accent.400');
-  color: theme('colors.ink.950');
-  font-weight: 600;
-  font-size: 0.8125rem;
-  border-radius: 0 0 10px 10px;
+  background: #00e5ff;
+  color: #0a0d14;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0 0 0.75rem 0.75rem;
   transition: top 0.2s ease;
 }
 .skip-link:focus {
   top: 0;
 }
 
-/* ---------------------------------------------------------------
-   SURFACES
-   Mostly-solid panels with a hairline border. Backdrop blur is
-   reserved for surfaces that genuinely overlap content (navbar,
-   modal scrim) — not used as decoration on static cards.
---------------------------------------------------------------- */
-.surface {
-  background: theme('colors.ink.850');
-  border: 1px solid theme('colors.ink.700');
-}
-
-.surface-raised {
-  background: theme('colors.ink.800');
-  border: 1px solid theme('colors.ink.700');
-}
-
-/* Interactive lift. 2px, not 4 — restraint reads as expensive. */
-.surface-interactive {
-  transition:
-    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.surface-interactive:hover {
-  background: theme('colors.ink.800');
-  border-color: theme('colors.ink.600');
-  transform: translateY(-2px);
-}
-
-/* Hairline rule matching the border ramp. */
-.hairline {
-  border-color: theme('colors.ink.700');
-}
-
-/* Legacy alias — kept so sections not yet migrated keep rendering.
-   Removed once every section is on the new surface system. */
+/* Custom Glassmorphism Classes */
 .glass-panel {
-  background: theme('colors.ink.850');
-  border: 1px solid theme('colors.ink.700');
+  background: rgba(18, 23, 35, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 .glass-panel-hover {
-  transition:
-    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .glass-panel-hover:hover {
-  background: theme('colors.ink.800');
-  border-color: theme('colors.ink.600');
-  transform: translateY(-2px);
+  background: rgba(26, 33, 50, 0.85);
+  border-color: rgba(0, 198, 255, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(0, 198, 255, 0.25);
+  transform: translateY(-4px);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #00e5ff 0%, #ae81ff 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 1rem;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0,229,255,0.5), rgba(174,129,255,0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* ---------------------------------------------------------------
-   Scroll-reveal (GPU-accelerated: opacity + transform only)
+   Scroll-reveal animation (GPU-accelerated: opacity + transform)
    Used by the reusable <Reveal /> component.
 --------------------------------------------------------------- */
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(24px);
   transition:
-    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
-  /* Dropped once settled so the browser can release the layer. */
-  will-change: auto;
 }
 
-/* ---------------------------------------------------------------
-   Hero entrance.
-   Deliberately CSS, not JS: the hero contains the LCP element, so it
-   must paint on the first frame rather than waiting for React to
-   hydrate and a motion library to take over. Stagger is expressed as
-   a per-element `--d` delay.
---------------------------------------------------------------- */
-@keyframes heroIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: none; }
+/* Aurora sweep for the hero heading gradient — subtle, slow */
+.gradient-text {
+  background-size: 200% auto;
+  animation: aurora-shift 8s ease-in-out infinite alternate;
 }
-.hero-in {
-  animation: heroIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--d, 0ms);
+@keyframes aurora-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 100% center; }
 }
 
-/* Very subtle film grain. Adds tooth to large flat dark areas. */
+/* Very subtle film-grain noise overlay (fixed, behind content) */
 .noise-overlay {
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.018;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ---------------------------------------------------------------
-   Respect the user's reduced-motion preference site-wide.
+   Respect user's reduced-motion preference across the whole site.
 --------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *,

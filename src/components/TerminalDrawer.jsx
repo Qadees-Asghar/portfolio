@@ -92,7 +92,7 @@ export default function TerminalDrawer({ isOpen, onClose }) {
                 <span className="text-cyan-400 font-semibold">{item.text}</span>
               )}
               {item.type === 'system' && (
-                <span className="text-fg-muted font-medium">{item.text}</span>
+                <span className="text-purple-400 font-medium">{item.text}</span>
               )}
               {item.type === 'output' && (
                 <pre className="text-slate-200 whitespace-pre-wrap font-mono mt-1 bg-slate-900/50 p-2 rounded border border-slate-800">

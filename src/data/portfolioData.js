@@ -5,9 +5,9 @@ export const personalData = {
     "Building Full-Stack Web Applications",
     "Developing Scalable ASP.NET Core Systems",
     "Crafting Responsive React Interfaces",
-    "Managing Databases"
+    "Designing Normalized SQL Databases"
   ],
-  bio: "Software Engineering Student at UET Lahore building full-stack applications with ASP.NET Core MVC, C#, .NET, ADO.NET, and SQL Server.",
+  bio: "Software Engineering student at UET Lahore with a passion for building scalable full-stack applications and well-architected desktop software. Experienced in C#/.NET and ASP.NET Core MVC, React front-ends, and 3-Layer, 3NF database design.",
   location: "Lahore, Pakistan",
   university: "University of Engineering & Technology (UET) Lahore",
   department: "Department of Computer Science",

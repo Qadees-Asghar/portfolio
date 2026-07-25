@@ -100,6 +100,7 @@ export default function Contact() {
         <SectionHeader
           icon={Mail}
           badge="Get in Touch"
+          accent="cyan"
           title={
             <>
               <span id="contact-heading">
@@ -146,7 +147,7 @@ export default function Contact() {
                 <span className="block text-[10px] font-mono text-slate-500 uppercase">Secondary Email</span>
                 <a
                   href={`mailto:${personalData.emails.secondary}`}
-                  className="text-xs sm:text-sm font-mono text-accent-300 font-semibold hover:underline block mt-0.5"
+                  className="text-xs sm:text-sm font-mono text-purple-300 font-semibold hover:underline block mt-0.5"
                 >
                   {personalData.emails.secondary}
                 </a>
@@ -178,10 +179,10 @@ export default function Contact() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="View Qadees Asghar's repositories on GitHub (opens in a new tab)"
-                  className="flex items-center justify-between p-3.5 rounded-2xl bg-[#0a0d14]/80 border border-slate-800 hover:border-ink-600 text-slate-200 hover:text-accent-300 transition-all group"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-[#0a0d14]/80 border border-slate-800 hover:border-purple-500/40 text-slate-200 hover:text-purple-300 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-slate-900 text-fg-muted">
+                    <div className="p-2 rounded-xl bg-slate-900 text-purple-400">
                       <Github className="w-4 h-4" aria-hidden="true" />
                     </div>
                     <div>
@@ -189,7 +190,7 @@ export default function Contact() {
                       <span className="block text-[10px] font-mono text-slate-500">Explore Open Source</span>
                     </div>
                   </div>
-                  <span className="text-xs font-mono text-accent-300 group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+                  <span className="text-xs font-mono text-purple-300 group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
                 </a>
               </div>
             </div>
@@ -287,7 +288,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 rounded-xl bg-accent-400 hover:bg-accent-300 text-black font-bold text-sm shadow-xl shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold text-sm shadow-xl shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>
