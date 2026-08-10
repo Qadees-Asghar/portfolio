@@ -15,10 +15,27 @@ import Reveal from './Reveal';
 const WEB3FORMS_ACCESS_KEY =
   import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '6a17ccce-ae4c-4387-8e66-58b56e871d83';
 
+// Accepts any properly-shaped local@domain.tld address — not tied to one provider.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateForm(formData) {
+  const errors = {};
+  if (!formData.get('name')?.trim()) errors.name = 'Please enter your name.';
+
+  const email = formData.get('email')?.trim() || '';
+  if (!email) errors.email = 'Please enter your email.';
+  else if (!EMAIL_RE.test(email)) errors.email = 'Please enter a valid email address (e.g. name@example.com).';
+
+  if (!formData.get('subject')?.trim()) errors.subject = 'Please enter a subject.';
+  if (!formData.get('message')?.trim()) errors.message = 'Please enter a message.';
+  return errors;
+}
+
 export default function Contact() {
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const handleCopyEmail = async () => {
     try {
@@ -37,6 +54,14 @@ export default function Contact() {
 
     // Honeypot: if the hidden field is filled, it's a bot — silently succeed.
     if (formData.get('botcheck')) return;
+
+    const errors = validateForm(formData);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setStatus('error');
+      setErrorMsg('Please fix the highlighted fields and try again.');
+      return;
+    }
 
     setStatus('submitting');
     setErrorMsg('');
@@ -60,6 +85,7 @@ export default function Contact() {
         payload.subject
       )}&body=${body}`;
       setStatus('success');
+      setFieldErrors({});
       form.reset();
       setTimeout(() => setStatus('idle'), 6000);
       return;
@@ -75,6 +101,7 @@ export default function Contact() {
 
       if (data.success) {
         setStatus('success');
+        setFieldErrors({});
         form.reset();
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
         setTimeout(() => setStatus('idle'), 6000);
@@ -87,6 +114,18 @@ export default function Contact() {
         'Something went wrong sending your message. Please email me directly at ' +
           personalData.emails.primary
       );
+    }
+  };
+
+  // Clears a field's error as soon as the user starts fixing it.
+  const handleFieldChange = (e) => {
+    const { name } = e.target;
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
     }
   };
 
@@ -236,8 +275,14 @@ export default function Contact() {
                       required
                       autoComplete="name"
                       placeholder="e.g. Alex Smith"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(fieldErrors.name)}
+                      aria-describedby={fieldErrors.name ? 'contact-name-error' : undefined}
                       className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-cyan-500 font-sans"
                     />
+                    {fieldErrors.name && (
+                      <p id="contact-name-error" className="mt-1 text-[11px] text-red-400" role="alert">{fieldErrors.name}</p>
+                    )}
                   </div>
 
                   <div>
@@ -249,8 +294,14 @@ export default function Contact() {
                       required
                       autoComplete="email"
                       placeholder="alex@company.com"
+                      onChange={handleFieldChange}
+                      aria-invalid={Boolean(fieldErrors.email)}
+                      aria-describedby={fieldErrors.email ? 'contact-email-error' : undefined}
                       className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-cyan-500 font-sans"
                     />
+                    {fieldErrors.email && (
+                      <p id="contact-email-error" className="mt-1 text-[11px] text-red-400" role="alert">{fieldErrors.email}</p>
+                    )}
                   </div>
                 </div>
 
@@ -262,8 +313,14 @@ export default function Contact() {
                     type="text"
                     required
                     placeholder="Project Inquiry / Job Opportunity"
+                    onChange={handleFieldChange}
+                    aria-invalid={Boolean(fieldErrors.subject)}
+                    aria-describedby={fieldErrors.subject ? 'contact-subject-error' : undefined}
                     className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-cyan-500 font-sans"
                   />
+                  {fieldErrors.subject && (
+                    <p id="contact-subject-error" className="mt-1 text-[11px] text-red-400" role="alert">{fieldErrors.subject}</p>
+                  )}
                 </div>
 
                 <div>
@@ -274,8 +331,14 @@ export default function Contact() {
                     rows={4}
                     required
                     placeholder="Hello Qadees, I'd like to discuss a project..."
+                    onChange={handleFieldChange}
+                    aria-invalid={Boolean(fieldErrors.message)}
+                    aria-describedby={fieldErrors.message ? 'contact-message-error' : undefined}
                     className="w-full px-4 py-3 rounded-xl bg-[#0a0d14] border border-slate-800 text-white placeholder-slate-600 text-sm focus:outline-none focus:border-cyan-500 font-sans"
                   />
+                  {fieldErrors.message && (
+                    <p id="contact-message-error" className="mt-1 text-[11px] text-red-400" role="alert">{fieldErrors.message}</p>
+                  )}
                 </div>
 
                 {status === 'error' && (
