@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BackgroundCanvas from './components/BackgroundCanvas';
@@ -82,6 +83,7 @@ export default function App() {
 
       {/* Vercel Web Analytics */}
       <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
